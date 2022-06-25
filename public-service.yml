@@ -6,8 +6,6 @@ Parameters:
     Default: Gl-project
     Description: The name of the parent Fargate networking stack that you created. Necessary
                  to locate and reference resources created by that stack.
-  ClusterId:
-    Type: String
   ServiceName:
     Type: String
     Default: GLProject
@@ -91,7 +89,9 @@ Resources:
     DependsOn: LoadBalancerRule
     Properties:
       ServiceName: !Ref 'ServiceName'
-      Cluster: !Ref ClusterId
+      Cluster: 
+        - Fn::ImportValue:
+                !Join [':', [!Ref 'StackName', 'ClusterName']]
       LaunchType: FARGATE
       DeploymentConfiguration:
         MaximumPercent: 200
